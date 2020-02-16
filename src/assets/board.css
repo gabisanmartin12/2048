@@ -1,0 +1,15 @@
+.board {
+	display: grid;
+	grid-template-columns: 8rem 8rem 8rem 8rem;
+	grid-template-rows: 8rem 8rem 8rem 8rem;
+	grid-gap: 1rem;
+}
+
+.board > * {
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	background-color: red;
+	color:white;
+	font-size: 4rem;
+}
