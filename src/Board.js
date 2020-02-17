@@ -19,23 +19,26 @@ const Board = () => {
 
 	const updatePack = direction => {
 		switch (direction) {
-			case 'UP': upChecking(); break;
-			case 'DOWN': downChecking(); break;
-			case 'LEFT': leftChecking(); break;
-			case 'RIGHT': rightChecking(); break;
+			case 'UP': verticalChecking(); break;
+			case 'DOWN': verticalChecking(true); break;
+			case 'LEFT': horizontalChecking(); break;
+			case 'RIGHT': horizontalChecking(true); break;
 			default: break;
 		}
+		addNumber()
 	}
 
-	const upChecking = () => {
+	const verticalChecking = (mustReverse = false) => {
 		let packClone = pack.clone()
-		packClone.reduceColumns()
+		packClone.reduceColumns(mustReverse)
 		setPack(packClone)
 	}
 
-	const downChecking = () => {}
-	const leftChecking = () => {}
-	const rightChecking = () => {}
+	const horizontalChecking = (mustReverse = false) => {
+		let packClone = pack.clone()
+		packClone.reduceRows(mustReverse)
+		setPack(packClone)
+	}
 
 	const addNumber = () => {
 		let { row, col } = getPostionForNewNumber()

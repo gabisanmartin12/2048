@@ -60,48 +60,45 @@ export class Matrix {
 	}
 
 	reduceColumn(idx, mustReverse = false) {
-		let column = this.getColumn(idx)
+		this.setColumn(idx, this.reduce(this.getColumn(idx), mustReverse))
+	}
 
-		// Must I reverse the column?
-		if (mustReverse) column.reverse()
+	reduceRows(mustReverse = false) {
+		for (let idx = 0; idx < this.rowCount; idx++)
+			this.reduceRow(idx, mustReverse)
+	}
 
+	reduceRow(idx, mustReverse) {
+		this.setRow(idx, this.reduce(this.getRow(idx), mustReverse))
+	}
+	
+	reduce(arr, mustReverse) {
+		// Must I reverse the array?
+		if (mustReverse) arr.reverse()
+	
 		// Filter zero values
-		let nonZeroValues = column.filter(val => val !== 0)
-		if (!nonZeroValues.length) return
+		let nonZeroValues = arr.filter(val => val !== 0)
+		if (!nonZeroValues.length) return []
 		
-		let newColumn = []
-		while (nonZeroValues.length) {
-			let current = nonZeroValues.pop(), remainingSize = nonZeroValues.length
-			if (!remainingSize || nonZeroValues[0] != current) {
-				newColumn.push(current)
-				return
-			}
-
-			if (remainingSize) {
-				
-			}
-			
+		let newArray = []
+		while (nonZeroValues.length > 1) {
+			let current = parseInt(nonZeroValues.splice(0, 1))
+			if (nonZeroValues[0] == current) {
+				let next = parseInt(nonZeroValues.splice(0, 1))
+				newArray.push(current + next)
+			} else newArray.push(current)
 		}
-
-		for (let colIdx = 0; colIdx < nonZeroValues.length-1; colIdx++) {
-			let current = nonZeroValues[colIdx],
-				next = nonZeroValues[colIdx + 1]
-
-			if (current === next) {
-				newColumn.push(current+next)
-				colIdx += 1;
-			} else {
-				newColumn.push(current)
-			}
-		}
-
-		while (newColumn.length !== this.colCount) {
-			newColumn.push(0)
-		}
-
-		if (mustReverse) newColumn.reverse()
 		
-		this.setColumn(idx, newColumn)
+		// Is it an one-element array?
+		if (nonZeroValues.length == 1) newArray.push(nonZeroValues.pop())
+	
+		// Fill the new column with zero values
+		while (newArray.length !== this.colCount) newArray.push(0)
+	
+		// If the array was reversed, then we must to undo that operation
+		if (mustReverse) newArray.reverse()
+
+		return newArray
 	}
 
 	setCellValue(row, col, value) {
